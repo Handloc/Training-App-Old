@@ -7,7 +7,7 @@ function LoginForm() {
   }
 
   return (
-    <form className="border-slate-800 border-2 w-4/5 md:w-1/5 lg:w-2/5 xl:w-1/5 h-96 rounded-xl m-auto mt-40 flex items-center justify-center flex-col">
+    <form className="border-slate-800 border-2 w-4/5 md:w-2/5 lg:w-2/5 xl:w-1/5 h-96 rounded-xl m-auto mt-40 flex items-center justify-center flex-col">
       <input
         className="w-4/5 h-10 mb-3 border-b-4 border-transparent rounded-md focus:outline-none focus:border-b-4 focus:border-fuchsia-600 p-3 bg-slate-500 text-white "
         placeholder="E-mail"
