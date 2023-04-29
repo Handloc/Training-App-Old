@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 
 const router = createBrowserRouter([
-  { path: "/", element: <LoginPage /> },
+  { path: "/auth", element: <LoginPage /> },
   { path: "/home", element: <HomePage /> },
 ]);
 
