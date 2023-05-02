@@ -3,6 +3,7 @@ import FormInput from "./FormInput";
 
 function LoginForm() {
   const [authState, setAuthState] = useState(true);
+
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -17,6 +18,16 @@ function LoginForm() {
 
   function changeAuthType() {
     setAuthState(!authState);
+    setIsValid({
+      email: true,
+      password: true,
+      password2: true,
+    });
+    setValues({
+      email: "",
+      password: "",
+      password2: "",
+    });
   }
 
   function submitHandler(e) {
@@ -27,35 +38,33 @@ function LoginForm() {
     setValues({ ...values, [e.target.name]: e.target.value });
   }
 
-  function validationHandler(e) {
-    if (e.target.name === "email") {
-      if (
-        !values[e.target.name].match(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)
-      ) {
-        setIsValid({ ...isValid, [e.target.name]: false });
-      } else {
-        setIsValid({ ...isValid, [e.target.name]: true });
-      }
-    }
-    if (e.target.name === "password") {
-      if (!values[e.target.name].match(/^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/)) {
-        setIsValid({ ...isValid, [e.target.name]: false });
-      } else {
-        setIsValid({ ...isValid, [e.target.name]: true });
-      }
-    }
-    if (e.target.name === "password2") {
-      if (
-        !values[e.target.name].match(values["password"]) ||
-        values[e.target.name].length === 0
-      ) {
-        setIsValid({ ...isValid, [e.target.name]: false });
-      } else {
-        setIsValid({ ...isValid, [e.target.name]: true });
-      }
+  function emailValidationHandler() {
+    if (!values["email"].match(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)) {
+      setIsValid({ ...isValid, ["email"]: false });
+    } else {
+      setIsValid({ ...isValid, email: true });
     }
   }
-  console.log(isValid);
+
+  function passwordValidationHandler() {
+    if (!values["password"].match(/^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/)) {
+      setIsValid({ ...isValid, password: false });
+    } else {
+      setIsValid({ ...isValid, password: true });
+    }
+  }
+
+  function confirmPasswordValidationHandler() {
+    if (
+      !values["password2"].match(values["password"]) ||
+      values["password2"].length === 0
+    ) {
+      setIsValid({ ...isValid, password2: false });
+    } else {
+      setIsValid({ ...isValid, password2: true });
+    }
+  }
+
   return (
     <form
       className="border-slate-800 border-2 w-4/5 md:w-2/5 lg:w-2/5 xl:w-1/5 max-h-fit pt-5 pb-5 rounded-xl m-auto mt-40 flex items-center justify-center flex-col"
@@ -64,16 +73,19 @@ function LoginForm() {
       <FormInput
         placeholder="E-mail"
         name="email"
+        value={values["email"]}
         onChange={valueChange}
-        onBlur={validationHandler}
+        onBlur={emailValidationHandler}
         errorMessage="E-mail must be valid"
         valid={isValid["email"]}
       />
       <FormInput
         placeholder="Password"
         name="password"
+        type="password"
+        value={values["password"]}
         onChange={valueChange}
-        onBlur={validationHandler}
+        onBlur={passwordValidationHandler}
         errorMessage="Password must be minimum 8 characters long, must contain minimum 1 capital letter and 1 special character"
         valid={isValid["password"]}
       />
@@ -81,8 +93,10 @@ function LoginForm() {
         <FormInput
           placeholder="Confirm password"
           name="password2"
+          type="password"
+          value={values["password2"]}
           onChange={valueChange}
-          onFocus={validationHandler}
+          onBlur={confirmPasswordValidationHandler}
           errorMessage="Passwords must be the same"
           valid={isValid["password2"]}
         />
