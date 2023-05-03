@@ -40,7 +40,7 @@ function LoginForm() {
 
   function emailValidationHandler() {
     if (!values["email"].match(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)) {
-      setIsValid({ ...isValid, ["email"]: false });
+      setIsValid({ ...isValid, email: false });
     } else {
       setIsValid({ ...isValid, email: true });
     }
