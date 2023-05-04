@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormInput from "./FormInput";
 
 function LoginForm() {
   const [authState, setAuthState] = useState(true);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/auth")
+      .then((res) => res.json())
+      .then((json) => setUsers(json.users));
+  }, []);
 
   const [values, setValues] = useState({
     email: "",
@@ -30,8 +37,24 @@ function LoginForm() {
     });
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
+
+    if (!authState) {
+      // TODO: Check if e-mail is available
+      const res = await fetch("api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values["email"],
+          password: values["password"],
+        }),
+      });
+      const json = await res.json();
+      setUsers([...users, json]);
+    } else {
+      // TODO: check if e-mail is in database
+    }
   }
 
   function valueChange(e) {
@@ -65,6 +88,7 @@ function LoginForm() {
     }
   }
 
+  console.log(users);
   return (
     <form
       className="border-slate-800 border-2 w-4/5 md:w-2/5 lg:w-2/5 xl:w-1/5 max-h-fit pt-5 pb-5 rounded-xl m-auto mt-40 flex items-center justify-center flex-col"
