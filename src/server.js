@@ -1,14 +1,18 @@
-import { createServer } from "miragejs";
+import { createServer, Model } from "miragejs";
 
 createServer({
+  models: {
+    user: Model,
+  },
+
   routes() {
-    this.get("/api/auth", () => {
-      return [];
+    this.get("/api/auth", (schema) => {
+      return schema.users.all();
     });
+
     this.post("/api/auth", (schema, request) => {
       let attrs = JSON.parse(request.requestBody);
-      attrs.id = Math.floor(Math.random() * 100);
-      return { attrs };
+      return schema.users.create(attrs);
     });
   },
 });
