@@ -39,21 +39,30 @@ function LoginForm() {
 
   async function submitHandler(e) {
     e.preventDefault();
-
-    if (!authState) {
-      // TODO: Check if e-mail is available
-      const res = await fetch("api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: values["email"],
-          password: values["password"],
-        }),
-      });
-      const json = await res.json();
-      setUsers([...users, json]);
+    let targetEmail = users.filter((user) => user["email"] === values["email"]);
+    if (targetEmail.length !== 0) {
+      if (authState) {
+        console.log("SIGN IN - EMAIL - SUCCESS");
+      }
+      if (!authState) {
+        console.log("SIGN UP - EMAIL - TAKEN");
+      }
     } else {
-      // TODO: check if e-mail is in database
+      if (authState) {
+        console.log("SIGN IN - EMAIL - NOT REGISTERED");
+      }
+      if (!authState) {
+        const res = await fetch("api/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: values["email"],
+            password: values["password"],
+          }),
+        });
+        const json = await res.json();
+        setUsers([...users, json]);
+      }
     }
   }
 
