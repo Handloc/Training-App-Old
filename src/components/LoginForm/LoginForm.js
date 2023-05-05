@@ -4,6 +4,7 @@ import FormInput from "./FormInput";
 function LoginForm() {
   const [authState, setAuthState] = useState(true);
   const [users, setUsers] = useState([]);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     fetch("/api/auth")
@@ -25,6 +26,7 @@ function LoginForm() {
 
   function changeAuthType() {
     setAuthState(!authState);
+    setFormError("");
     setIsValid({
       email: true,
       password: true,
@@ -40,34 +42,45 @@ function LoginForm() {
   async function submitHandler(e) {
     e.preventDefault();
     let targetEmail = users.filter((user) => user["email"] === values["email"]);
-    if (targetEmail.length !== 0) {
-      if (authState) {
-        console.log("SIGN IN - EMAIL - SUCCESS");
+    if (authState) {
+      if (values["email"].length === 0 || values["password"].length === 0) {
+        setFormError("All input fields must be filled!");
+      } else {
+        if (targetEmail.length !== 0) {
+          console.log("SIGN IN - EMAIL - SUCCESS");
+        } else {
+          setFormError("Given e-mail adress is not registered");
+        }
       }
-      if (!authState) {
-        console.log("SIGN UP - EMAIL - TAKEN");
-      }
-    } else {
-      if (authState) {
-        console.log("SIGN IN - EMAIL - NOT REGISTERED");
-      }
-      if (!authState) {
-        const res = await fetch("api/auth", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: values["email"],
-            password: values["password"],
-          }),
-        });
-        const json = await res.json();
-        setUsers([...users, json]);
+    }
+    if (!authState) {
+      if (
+        values["email"].length === 0 ||
+        values["password"].length === 0 ||
+        values["password2"].length === 0
+      ) {
+        setFormError("All input fields must be filled!");
+      } else {
+        if (targetEmail.length !== 0) {
+          setFormError("That e-mail adress is already taken");
+        } else {
+          const res = await fetch("api/auth", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: values["email"],
+              password: values["password"],
+            }),
+          });
+          const json = await res.json();
+          setUsers([...users, json]);
+        }
       }
     }
   }
-
   function valueChange(e) {
     setValues({ ...values, [e.target.name]: e.target.value });
+    setFormError("");
   }
 
   function emailValidationHandler() {
@@ -145,6 +158,7 @@ function LoginForm() {
         {authState && "Sign in"}
         {!authState && "Sign up"}
       </button>
+      <p className="text-red-600 w-4/5 text-center mt-5">{formError}</p>
     </form>
   );
 }
