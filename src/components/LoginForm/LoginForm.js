@@ -41,7 +41,18 @@ function LoginForm() {
 
   async function submitHandler(e) {
     e.preventDefault();
-    let targetEmail = users.filter((user) => user["email"] === values["email"]);
+    // let targetEmail = users.filter((user) => user["email"] === values["email"]);
+    // console.log(targetEmail);
+    // users.map((user) => console.log(user["email"]));
+    let targetEmail = 0;
+    if (users.length > 0) {
+      users.forEach((user) => {
+        if (user.user["email"] === values["email"]) {
+          targetEmail++;
+        }
+      });
+    }
+    console.log(targetEmail);
     if (authState) {
       if (values["email"].length === 0 || values["password"].length === 0) {
         setFormError("All input fields must be filled!");
@@ -61,9 +72,10 @@ function LoginForm() {
       ) {
         setFormError("All input fields must be filled!");
       } else {
-        if (targetEmail.length !== 0) {
+        if (targetEmail !== 0) {
           setFormError("That e-mail adress is already taken");
         } else {
+          console.log("SIGN UP");
           const res = await fetch("api/auth", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -77,7 +89,9 @@ function LoginForm() {
         }
       }
     }
+    targetEmail = 0;
   }
+
   function valueChange(e) {
     setValues({ ...values, [e.target.name]: e.target.value });
     setFormError("");
