@@ -41,9 +41,6 @@ function LoginForm() {
 
   async function submitHandler(e) {
     e.preventDefault();
-    // let targetEmail = users.filter((user) => user["email"] === values["email"]);
-    // console.log(targetEmail);
-    // users.map((user) => console.log(user["email"]));
     let targetEmail = 0;
     if (users.length > 0) {
       users.forEach((user) => {
@@ -52,7 +49,7 @@ function LoginForm() {
         }
       });
     }
-    console.log(targetEmail);
+
     if (authState) {
       if (values["email"].length === 0 || values["password"].length === 0) {
         setFormError("All input fields must be filled!");
