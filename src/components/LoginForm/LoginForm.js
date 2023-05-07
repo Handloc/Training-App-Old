@@ -46,20 +46,28 @@ function LoginForm() {
   async function submitHandler(e) {
     e.preventDefault();
     let targetEmail = 0;
+    let targetUser = {};
     if (users.length > 0) {
       users.forEach((user) => {
         if (user.user["email"] === values["email"]) {
+          targetUser = user.user;
+          console.log(targetUser);
           targetEmail++;
         }
       });
     }
-
+    console.log(`VALUES: ${values["email"]}`);
     if (authState) {
       if (values["email"].length === 0 || values["password"].length === 0) {
         setFormError("All input fields must be filled!");
       } else {
-        if (targetEmail.length !== 0) {
-          console.log("SIGN IN - EMAIL - SUCCESS");
+        if (targetEmail !== 0) {
+          if (targetUser["password"] === values["password"]) {
+            console.log("SIGN IN SUCCESS");
+            resetInputValues();
+          } else {
+            setFormError("Password does not match with given e-mail!");
+          }
         } else {
           setFormError("Given e-mail adress is not registered");
         }
