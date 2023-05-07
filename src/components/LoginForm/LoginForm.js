@@ -24,6 +24,14 @@ function LoginForm() {
     password2: true,
   });
 
+  function resetInputValues() {
+    setValues({
+      email: "",
+      password: "",
+      password2: "",
+    });
+  }
+
   function changeAuthType() {
     setAuthState(!authState);
     setFormError("");
@@ -32,11 +40,7 @@ function LoginForm() {
       password: true,
       password2: true,
     });
-    setValues({
-      email: "",
-      password: "",
-      password2: "",
-    });
+    resetInputValues();
   }
 
   async function submitHandler(e) {
@@ -72,7 +76,6 @@ function LoginForm() {
         if (targetEmail !== 0) {
           setFormError("That e-mail adress is already taken");
         } else {
-          console.log("SIGN UP");
           const res = await fetch("api/auth", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -83,6 +86,7 @@ function LoginForm() {
           });
           const json = await res.json();
           setUsers([...users, json]);
+          resetInputValues();
         }
       }
     }
