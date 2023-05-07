@@ -154,7 +154,7 @@ function LoginForm() {
         type="password"
         value={values["password"]}
         onChange={valueChange}
-        onBlur={passwordValidationHandler}
+        onBlur={!authState ? passwordValidationHandler : null}
         errorMessage="Password must be minimum 8 characters long, must contain minimum 1 capital letter and 1 special character"
         valid={isValid["password"]}
       />
