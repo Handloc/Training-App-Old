@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import FormInput from "./FormInput";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store";
 
 function LoginForm() {
   const [authState, setAuthState] = useState(true);
   const [users, setUsers] = useState([]);
   const [formError, setFormError] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetch("/api/auth")
@@ -63,8 +66,8 @@ function LoginForm() {
       } else {
         if (targetEmail !== 0) {
           if (targetUser["password"] === values["password"]) {
-            console.log("SIGN IN SUCCESS");
             resetInputValues();
+            dispatch(authActions.login());
           } else {
             setFormError("Password does not match with given e-mail!");
           }
