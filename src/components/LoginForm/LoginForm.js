@@ -136,7 +136,6 @@ function LoginForm() {
     }
   }
 
-  console.log(users);
   return (
     <form
       className="border-slate-800 border-2 w-4/5 md:w-2/5 lg:w-2/5 xl:w-1/5 max-h-fit pt-5 pb-5 rounded-xl m-auto mt-40 flex items-center justify-center flex-col"
@@ -157,7 +156,7 @@ function LoginForm() {
         type="password"
         value={values["password"]}
         onChange={valueChange}
-        onBlur={!authState ? passwordValidationHandler : null}
+        onBlur={!authState && passwordValidationHandler}
         errorMessage="Password must be minimum 8 characters long, must contain minimum 1 capital letter and 1 special character"
         valid={isValid["password"]}
       />
